@@ -1,0 +1,56 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.nav input{
+    width: 500px;
+    height: 50px;
+       font-size: 25px;
+         margin-right: 10px;
+      border-radius: 10px;
+    
+}
+.nav {
+    position: relative;
+}
+
+
+.nav .search-icon{
+  position: absolute;
+  margin-left: -48px;
+  margin-top: 14px;
+  font-size: 27px;
+}
+
+.countries{ 
+  
+    width: 80%;
+    margin: auto;
+    margin-top: 6%;
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 30px;
+}
+
+.countries-card{
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  
+}
+
+  .countries-card > div{
+      height: 50%;
+  }
+
+  .countries-card > div :hover{
+  transform: scale(1.1);
+  overflow: hidden;
+  position: relative;
+  }
+.countries-card img{
+  transition: transform 0.5s ease;
+     width: 100%;
+     height: 100%;
+}
