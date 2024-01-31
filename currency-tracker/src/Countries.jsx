@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import CountriesCard from "./Component/CountriesCard";
 
-export const Countries = () => {
-  const [data, setData] = useState([]);
+export const Countries = ({data,setData}) => {
+ 
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const fetchData = () => {
@@ -10,6 +10,7 @@ export const Countries = () => {
     fetch(`https://restcountries.com/v3.1/all`)
       .then((res) => res.json())
       .then((res) => {
+        
         setData(res);
         setLoading(false);
       })
@@ -32,14 +33,14 @@ export const Countries = () => {
     <>
       <div className="countries">
         {data.length > 0 &&
-          data.slice(page * 10 - 10, page * 10).map((item, index) => {
+          data.slice(page * 12 - 12, page * 12).map((item, index) => {
             return <CountriesCard key={index} {...item} />;
           })}
       </div>
       {data.length > 0 && (
         <div className="pagination">
           <span onClick={() => selectPageHandler(page- 1)} className={page > 1 ? "" : "pagination__disable"}>◀</span>
-          {[...Array(data.length / 10)].map((_, i) => {
+          {[...Array(Math.floor (data.length / 12))].map((_, i) => {
             return (
               <span key={i} onClick={() => selectPageHandler(i + 1)}
                 className={page==i+1?"pagination_selected":""}

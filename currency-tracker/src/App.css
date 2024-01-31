@@ -63,14 +63,17 @@
 
 .pagination > span {
      padding: 15px 15px ;
-       border: 1px solid gray;
+       /* border: 1px solid gray; */
        cursor: pointer;
 }
 
 
 .pagination_selected{
   background-color: rgba(178, 177, 177, 0.854);
+    border-radius: 50%;
 }
 .pagination__disable{
     opacity: 0;
 }
+
+
