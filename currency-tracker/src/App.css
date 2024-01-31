@@ -1,3 +1,6 @@
+*{
+  scroll-behavior: smooth;
+}
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -79,3 +82,58 @@
 }
 
 
+@media (max-width: 768px) {
+  .nav input {
+    width: 350px;
+    font-size: 20px;
+    padding: 5px;
+  }
+
+  .nav .search-icon {
+    margin-left: -45px;
+    margin-top: 17px;
+    font-size: 26px;
+  }
+
+  .countries {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pagination {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pagination > span {
+    padding: 15px 12px;
+
+    cursor: pointer;
+  }
+}
+@media (max-width: 480px) {
+  .nav input {
+    width: 300px;
+    font-size: 20px;
+  }
+
+  .nav .search-icon {
+    margin-left: -44px;
+    margin-top: 18px;
+    font-size: 24px;
+  }
+
+  .countries {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .pagination {
+    width: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+  }
+  .pagination > span {
+    padding: 15px 8px;
+
+    cursor: pointer;
+  }
+}

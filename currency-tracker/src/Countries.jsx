@@ -4,7 +4,9 @@ import CountriesCard from "./Component/CountriesCard";
 const Countries = ({ data, setData }) => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -37,10 +39,10 @@ const Countries = ({ data, setData }) => {
     return <h1>Loading....</h1>;
   }
 
-  // Calculate the total number of pages
+  // Calculating the total number of pages
   const totalPages = Math.ceil(data.length / 12);
 
-  // Calculate the range of pagination links to display
+  // Calculating the range of pagination links to display
   const startPage = Math.max(1, page - 4);
   const endPage = Math.min(totalPages, startPage + 9);
 
@@ -53,7 +55,7 @@ const Countries = ({ data, setData }) => {
       </div>
       <div className="pagination">
         <span
-          onClick={() => selectPageHandler(page - 1)}
+        onClick={() => { selectPageHandler(startPage + i); scrollToTop(); }}
           className={page > 1 ? "" : "pagination__disable"}
         >
           ◀ Prev
@@ -62,14 +64,15 @@ const Countries = ({ data, setData }) => {
         {Array.from({ length: endPage - startPage + 1 }, (_, i) => (
           <span
             key={startPage + i}
-            onClick={() => selectPageHandler(startPage + i)}
+            onClick={() => {selectPageHandler(startPage + i); scrollToTop();}}
             className={page === startPage + i ? "pagination_selected" : ""}
           >
             {startPage + i}
           </span>
         ))}
         <span
-          onClick={() => selectPageHandler(page + 1)}
+          onClick={() => {selectPageHandler(page + 1);
+            scrollToTop();}}
           className={page < totalPages ? "" : "pagination__disable"}
         >
           Next ▶
