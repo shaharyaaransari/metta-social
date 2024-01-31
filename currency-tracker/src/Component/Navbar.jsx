@@ -1,56 +1,75 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-export const Navbar = ({ search, setSearch, data, setData }) => {
-    // Initialize originalData state with the initial data received via props
-    const [originalData] = useState(data);
+const Navbar = ({ search, setSearch, setData }) => {
+  const [originalData, setOriginalData] = useState([]);
 
-    // Function to handle search based on the input query
-    const handleSearch = () => {
-        // If the search query is empty, reset data to the original data set
-        if (search.trim() === '') {
-            setData(originalData);
-            return;
-        }
+  const fetchData = async () => {
+    try {
+      const response = await fetch("https://restcountries.com/v3.1/all");
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const jsonData = await response.json();
+      if (jsonData) {
+        setOriginalData(jsonData);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-        // Create a regular expression for case-insensitive search
-        const regex = new RegExp(search, 'i');
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-        // Filter the original data based on the search query
-        const updatedData = originalData.filter((item) => {
-            if (item.currencies && typeof item.currencies === 'object') {
-                const currencies = Object.keys(item.currencies);
-                return currencies.some((currency) => regex.test(currency));
-            }
-            return false;
+  const handleSearch = async (searchQuery) => {
+    try {
+      const response = await fetch("https://restcountries.com/v3.1/all");
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const jsonData = await response.json();
+      if (jsonData) {
+        const regex = new RegExp(searchQuery, "i");
+        const updatedData = jsonData.filter((item) => {
+          if (item.currencies && typeof item.currencies === "object") {
+            const currencies = Object.keys(item.currencies);
+            return currencies.some((currency) => regex.test(currency));
+          }
+          return false;
         });
-
-        // Updating  the data state with the filtered data
         setData(updatedData);
-    };
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    // Using useEffect to debounce the search operation.
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            handleSearch();
-        }, 600);
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      handleSearch(search);
+    }, 600);
+    return () => clearTimeout(delayDebounceFn);
+  }, [search, setData]);
 
-        // Cleanup function to clear the timeout on component unmount or when search query changes.
-        return () => clearTimeout(delayDebounceFn);
-    }, [search, originalData, setData]);
-
-    
-    return (
-        <div className='nav'>
-            <input
-                type='text'
-                placeholder='Enter the Currency'
-                width={"200px"}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
-            <FontAwesomeIcon icon={faMagnifyingGlass} onClick={handleSearch} className='search-icon' />
-        </div>
-    );
+  return (
+    <div className="nav">
+      <input
+        type="text"
+        placeholder="Enter the Currency"
+        width={"200px"}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      <FontAwesomeIcon
+        icon={faSearch}
+        onClick={() => handleSearch(search)}
+        className="search-icon"
+      />
+    </div>
+  );
 };
+
+export default Navbar;

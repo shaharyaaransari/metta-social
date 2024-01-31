@@ -1,58 +1,82 @@
 import React, { useEffect, useState } from "react";
 import CountriesCard from "./Component/CountriesCard";
 
-export const Countries = ({data,setData}) => {
- 
+const Countries = ({ data, setData }) => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const fetchData = () => {
+
+  const fetchData = async () => {
     setLoading(true);
-    fetch(`https://restcountries.com/v3.1/all`)
-      .then((res) => res.json())
-      .then((res) => {
-        
-        setData(res);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      const response = await fetch("https://restcountries.com/v3.1/all");
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const jsonData = await response.json();
+      if (jsonData) {
+        setData(jsonData);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const selectPageHandler = (selectedPage) => {
-      if(selectedPage>=1 && selectedPage<=data.length/10 && selectedPage!==page)
-    setPage(selectedPage);
+    if (selectedPage >= 1 && selectedPage <= Math.ceil(data.length / 12)) {
+      setPage(selectedPage);
+    }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
+
   if (loading) {
     return <h1>Loading....</h1>;
   }
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(data.length / 12);
+
+  // Calculate the range of pagination links to display
+  const startPage = Math.max(1, page - 4);
+  const endPage = Math.min(totalPages, startPage + 9);
+
   return (
     <>
       <div className="countries">
-        {data.length > 0 &&
-          data.slice(page * 12 - 12, page * 12).map((item, index) => {
-            return <CountriesCard key={index} {...item} />;
-          })}
+        {data.slice((page - 1) * 12, page * 12).map((item, index) => (
+          <CountriesCard key={index} {...item} />
+        ))}
       </div>
-      {data.length > 0 && (
-        <div className="pagination">
-          <span onClick={() => selectPageHandler(page- 1)} className={page > 1 ? "" : "pagination__disable"}>◀</span>
-          {[...Array(Math.floor (data.length / 12))].map((_, i) => {
-            return (
-              <span key={i} onClick={() => selectPageHandler(i + 1)}
-                className={page==i+1?"pagination_selected":""}
-              >
-                {i + 1}
-              </span>
-            );
-          })}
-
-          <span className={page < data.length / 10 ? "" : "pagination__disable"} onClick={() => selectPageHandler(page+ 1)}>▶</span>
-        </div>
-      )}
+      <div className="pagination">
+        <span
+          onClick={() => selectPageHandler(page - 1)}
+          className={page > 1 ? "" : "pagination__disable"}
+        >
+          ◀ Prev
+        </span>
+        {/* Render pagination links */}
+        {Array.from({ length: endPage - startPage + 1 }, (_, i) => (
+          <span
+            key={startPage + i}
+            onClick={() => selectPageHandler(startPage + i)}
+            className={page === startPage + i ? "pagination_selected" : ""}
+          >
+            {startPage + i}
+          </span>
+        ))}
+        <span
+          onClick={() => selectPageHandler(page + 1)}
+          className={page < totalPages ? "" : "pagination__disable"}
+        >
+          Next ▶
+        </span>
+      </div>
     </>
   );
 };
+
+export default Countries;
