@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CountriesCard from "./Component/CountriesCard";
+import { Spinner } from "./Component/Spinner";
 
 const Countries = ({ data, setData }) => {
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ const Countries = ({ data, setData }) => {
   }, []);
 
   if (loading) {
-    return <h1>Loading....</h1>;
+    return <Spinner/>;
   }
 
   // Calculating the total number of pages
